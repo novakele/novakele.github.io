@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https:/cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css" />
+  <script src="https://unpkg.com/docsify-mermaid@2.0.1/dist/docsify-mermaid.js"></script>
+  <!--<script>
+    if (typeof navigator.serviceWorker !== 'undefined') {navigator.serviceWorker.register('sw.js');}
+  </script-->
+  <link rel="stylesheet" href="https://unpkg.com/docsify-plugin-toc@1.3.1/dist/light.css">
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      window.$docsify = {
+	      name: 'KBaaS',
+	      subMaxLeve: 2,
+	      coverpage: true,
+	      loadSidebar: "_sidebar.md",
+	      toc: {
+    		tocMaxLevel: 3,
+    		target: 'h2, h3, h4, h5, h6',
+    		ignoreHeaders:  ['<!-- {docsify-ignore} -->', '<!-- {docsify-ignore-all} -->']
+  },
+        //...
+      };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/docsify@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+    <script src="//unpkg.com/mermaid/dist/mermaid.js"></script>
+    <script src="//unpkg.com/docsify-mermaid@latest/dist/docsify-mermaid.js"></script>
+    <script src="https://unpkg.com/docsify-plugin-toc@1.3.1/dist/docsify-plugin-toc.min.js"></script>
+  </body>
+</html>
