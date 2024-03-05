@@ -8,4 +8,6 @@
   * [Web Application](/kbaas/webapp.md) 
 * CLI-fu
   * [One-liners](/kbaas/oneliners.md)
+* Training
+  * [Web Security Academy](/kbaas/websecurityacademy.md)
 
