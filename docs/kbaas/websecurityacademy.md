@@ -1,15 +1,19 @@
 ## Web Security Academy
 
 ### Objective
+
 Keep track of my solutions for each Academy labs that I complete from this point forward. For the simplest ones, I do not expect to have much more details than the payload.
 
 ### SQL injection
+
 #### Apprentice
+
 #### Practitioner
 
 #### Expert
 
 ### Cross-site scripting
+
 #### Apprentice
 
 ##### [Reflected XSS](https://portswigger.net/web-security/cross-site-scripting/reflected) into HTML context with nothing encoded
