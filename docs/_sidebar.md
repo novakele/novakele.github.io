@@ -8,6 +8,8 @@
 * Penetration Testing
   * [Cypher queries](/kbaas/cypherqueries.md)
   * [Web Application](/kbaas/webapp.md) 
+  * [Reporting Boiletplates](/kbaas/6.md)
+  * [TL;DR Tooling](/kbaas/8.md)
 * CLI-fu
   * [One-liners](/kbaas/oneliners.md)
 * Training
