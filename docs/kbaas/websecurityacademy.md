@@ -1,6 +1,6 @@
-## Web Security Academy
+# Web Security Academy
 
-### Objective
+## Objective
 
 Keep track of my solutions for each Academy labs that I complete from this point forward. For the simplest ones, I do not expect to have much more details than the payload.
 

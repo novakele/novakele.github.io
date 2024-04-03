@@ -1,6 +1,6 @@
-## One-liners
+# One-liners
 
-### Objective
+## Objective
 
 One stop shop for all the one-liners that I find useful, but have to used a search engine every time.
 

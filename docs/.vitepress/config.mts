@@ -1,49 +1,44 @@
 import { defineConfig } from 'vitepress'
+import { withMermaid } from "vitepress-plugin-mermaid";
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
+export default withMermaid({
   title: "KBaaS",
   description: "Knowledge Base as a Service",
+  head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'System Administration',
         items: [
-            { text: 'sdfsdf', link: '/kbaas/1'},
-            { text: 'fdsdsf', link: '/kbaas/2'},
-            { text: 'fdsdsf', link: '/kbaas/3'},
-            { text: 'fdsdsf', link: '/kbaas/4'},
-            { text: 'fdsdsf', link: '/kbaas/5'}
+            { text: 'SSH point-to-point tunnel', link: '/kbaas/0'},
+            { text: 'Incus DNS resolution with systemd-networkd', link: '/kbaas/1'},
+            { text: 'Samba share with sane defaults', link: '/kbaas/2'},
+            { text: 'Dummy interface to share resources', link: '/kbaas/3'},
+            { text: 'Running Jenkins agent as a service on Windows', link: '/kbaas/4'},
+            { text: 'Download offline .Net Framework target pack', link: '/kbaas/5'},
+            { text: 'Dynamic Docker containers for CTF', link: '/kbaas/7'},
+            { text: 'VPS for egress port testing', link: '/kbaas/9'},
         ]
       },
       { text: 'Penetration Testing',
         items: [
-            { text: 'sdfsdf', link: '/kbaas/1'},
-            { text: 'fdsdsf', link: '/kbaas/2'},
-            { text: 'fdsdsf', link: '/kbaas/3'},
-            { text: 'fdsdsf', link: '/kbaas/4'},
-            { text: 'fdsdsf', link: '/kbaas/5'}
+            { text: 'Reporting boilerplates', link: '/kbaas/6'},
+            { text: 'TL;DR Tooling', link: '/kbaas/8'},
+            { text: 'Sliver C2', link: '/kbaas/10'},
+            { text: 'Cypher queries', link: '/kbaas/cypherqueries'},
         ]
       },
       { text: 'CLI-fu',
         items: [
-            { text: 'sdfsdf', link: '/kbaas/1'},
-            { text: 'fdsdsf', link: '/kbaas/2'},
-            { text: 'fdsdsf', link: '/kbaas/3'},
-            { text: 'fdsdsf', link: '/kbaas/4'},
-            { text: 'fdsdsf', link: '/kbaas/5'}
+            { text: 'One-liners', link: '/kbaas/oneliners'},
         ]
       },
       { text: 'Training',
         items: [
-            { text: 'sdfsdf', link: '/kbaas/1'},
-            { text: 'fdsdsf', link: '/kbaas/2'},
-            { text: 'fdsdsf', link: '/kbaas/3'},
-            { text: 'fdsdsf', link: '/kbaas/4'},
-            { text: 'fdsdsf', link: '/kbaas/5'}
+            { text: 'Web Security Academy', link: '/kbaas/websecurityacademy'},
         ]
       }
-
     ],
     search: {
         provider: 'local'
@@ -57,43 +52,42 @@ export default defineConfig({
     },
     sidebar: [
       { text: 'System Administration',
-        items: [
-            { text: 'sdfsdf', link: '/kbaas/1'},
-            { text: 'fdsdsf', link: '/kbaas/2'},
-            { text: 'fdsdsf', link: '/kbaas/3'},
-            { text: 'fdsdsf', link: '/kbaas/4'},
-            { text: 'fdsdsf', link: '/kbaas/5'}
-        ]
-      },
-      { text: 'Penetration Testing',
-        items: [
-            { text: 'sdfsdf', link: '/kbaas/1'},
-            { text: 'fdsdsf', link: '/kbaas/2'},
-            { text: 'fdsdsf', link: '/kbaas/3'},
-            { text: 'fdsdsf', link: '/kbaas/4'},
-            { text: 'fdsdsf', link: '/kbaas/5'}
-        ]
-      },
-      { text: 'CLI-fu',
-        items: [
-            { text: 'sdfsdf', link: '/kbaas/1'},
-            { text: 'fdsdsf', link: '/kbaas/2'},
-            { text: 'fdsdsf', link: '/kbaas/3'},
-            { text: 'fdsdsf', link: '/kbaas/4'},
-            { text: 'fdsdsf', link: '/kbaas/5'}
-        ]
-      },
-      { text: 'Training',
-        items: [
-            { text: 'sdfsdf', link: '/kbaas/1'},
-            { text: 'fdsdsf', link: '/kbaas/2'},
-            { text: 'fdsdsf', link: '/kbaas/3'},
-            { text: 'fdsdsf', link: '/kbaas/4'},
-            { text: 'fdsdsf', link: '/kbaas/5'}
-        ]}
+      items: [
+          { text: 'SSH point-to-point tunnel', link: '/kbaas/0'},
+          { text: 'Incus DNS resolution with systemd-networkd', link: '/kbaas/1'},
+          { text: 'Samba share with sane defaults', link: '/kbaas/2'},
+          { text: 'Dummy interface to share resources', link: '/kbaas/3'},
+          { text: 'Running Jenkins agent as a service on Windows', link: '/kbaas/4'},
+          { text: 'Download offline .Net Framework target pack', link: '/kbaas/5'},
+          { text: 'Dynamic Docker containers for CTF', link: '/kbaas/7'},
+          { text: 'VPS for egress port testing', link: '/kbaas/9'},
+      ]
+    },
+    { text: 'Penetration Testing',
+      items: [
+          { text: 'Reporting boilerplates', link: '/kbaas/6'},
+          { text: 'TL;DR Tooling', link: '/kbaas/8'},
+          { text: 'Sliver C2', link: '/kbaas/10'},
+          { text: 'Cypher queries', link: '/kbaas/cypherqueries'},
+      ]
+    },
+    { text: 'CLI-fu',
+      items: [
+          { text: 'One-liners', link: '/kbaas/oneliners'},
+      ]
+    },
+    { text: 'Training',
+      items: [
+          { text: 'Web Security Academy', link: '/kbaas/websecurityacademy'},
+      ]
+    }
     ],
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
+      { icon: 'github', link: 'https://github.com/novakele' },
+      { icon: {
+        svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 380"><defs><style>.cls-1{fill:#e24329;}.cls-2{fill:#fc6d26;}.cls-3{fill:#fca326;}</style></defs><g id="LOGO"><path class="cls-1" d="M282.83,170.73l-.27-.69-26.14-68.22a6.81,6.81,0,0,0-2.69-3.24,7,7,0,0,0-8,.43,7,7,0,0,0-2.32,3.52l-17.65,54H154.29l-17.65-54A6.86,6.86,0,0,0,134.32,99a7,7,0,0,0-8-.43,6.87,6.87,0,0,0-2.69,3.24L97.44,170l-.26.69a48.54,48.54,0,0,0,16.1,56.1l.09.07.24.17,39.82,29.82,19.7,14.91,12,9.06a8.07,8.07,0,0,0,9.76,0l12-9.06,19.7-14.91,40.06-30,.1-.08A48.56,48.56,0,0,0,282.83,170.73Z"/><path class="cls-2" d="M282.83,170.73l-.27-.69a88.3,88.3,0,0,0-35.15,15.8L190,229.25c19.55,14.79,36.57,27.64,36.57,27.64l40.06-30,.1-.08A48.56,48.56,0,0,0,282.83,170.73Z"/><path class="cls-3" d="M153.43,256.89l19.7,14.91,12,9.06a8.07,8.07,0,0,0,9.76,0l12-9.06,19.7-14.91S209.55,244,190,229.25C170.45,244,153.43,256.89,153.43,256.89Z"/><path class="cls-2" d="M132.58,185.84A88.19,88.19,0,0,0,97.44,170l-.26.69a48.54,48.54,0,0,0,16.1,56.1l.09.07.24.17,39.82,29.82s17-12.85,36.57-27.64Z"/></g></svg>'
+      }, link: 'https://gitlab.com/novakele' },
+      { icon: 'linkedin', link: 'https://www.linkedin.com/in/christophe-langlois-0b7ba8197/' },
     ],
     outline: [2,3],
   }
