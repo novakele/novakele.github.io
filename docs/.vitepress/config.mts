@@ -1,5 +1,10 @@
-import { defineConfig } from 'vitepress'
+import path from 'path'
+import { writeFileSync } from 'fs'
+import { Feed } from 'feed'
+import { defineConfig, createContentLoader, type SiteConfig } from 'vitepress'
 import { withMermaid } from "vitepress-plugin-mermaid";
+
+const hostname: string = 'https://blog.breakme.ca'
 
 // https://vitepress.dev/reference/site-config
 export default withMermaid({
@@ -38,7 +43,8 @@ export default withMermaid({
         items: [
             { text: 'Web Security Academy', link: '/kbaas/websecurityacademy'},
         ]
-      }
+      },
+      { text: 'Bookmarks', link: '/kbaas/bookmarks'},
     ],
     search: {
         provider: 'local'
@@ -80,7 +86,8 @@ export default withMermaid({
       items: [
           { text: 'Web Security Academy', link: '/kbaas/websecurityacademy'},
       ]
-    }
+    },
+    { text: 'Bookmarks', link: '/kbaas/bookmarks'},
     ],
     socialLinks: [
       { icon: 'github', link: 'https://github.com/novakele' },
@@ -90,5 +97,50 @@ export default withMermaid({
       { icon: 'linkedin', link: 'https://www.linkedin.com/in/christophe-langlois-0b7ba8197/' },
     ],
     outline: [2,3],
-  }
+  },
+  buildEnd: async (config: SiteConfig) => {
+    const feed = new Feed({
+      title: 'KBaaS',
+      description: 'Knowledge Base as a Service',
+      id: hostname,
+      link: hostname,
+      language: 'en',
+      favicon: `${hostname}/favicon.ico`,
+      copyright:
+        'Copyright (c) 2023-present, Christophe Langlois'
+    })
+
+    // You might need to adjust this if your Markdown files 
+    // are located in a subfolder
+    const posts = await createContentLoader('kbaas/*.md', {
+      excerpt: true,
+      render: true
+    }).load()
+  
+    posts.sort(
+      (a, b) =>
+        +new Date(b.frontmatter.date as string) -
+        +new Date(a.frontmatter.date as string)
+    )
+  
+    for (const { url, excerpt, frontmatter, html } of posts) {
+      feed.addItem({
+        title: frontmatter.title,
+        id: `${hostname}${url}`,
+        link: `${hostname}${url}`,
+        description: excerpt,
+        content: html,
+        author: [
+          {
+            name: 'Christophe Langlois',
+            email: 'rss@correo.breakme.ca',
+            link: 'https://blog.breakme.ca'
+          }
+        ],
+        date: frontmatter.date
+      })
+    }
+  
+    writeFileSync(path.join(config.outDir, 'feed.rss'), feed.rss2())
+  },
 })

@@ -28,16 +28,45 @@ hero:
     - theme: alt
       text: Reporting boilerplates
       link: /kbaas/6
+    - theme: alt
+      text: Dynamic Docker containers for CTF
+      link: /kbaas/7  
+    - theme: alt
+      text: TL;DR Tooling
+      link: /kbaas/8
+    - theme: alt
+      text: VPS for egress port testing
+      link: /kbaas/9
+    - theme: alt
+      text: Sliver C2
+      link: /kbaas/10
+    - theme: alt
+      text: Cypher queries
+      link: /kbaas/cypherqueries
+    - theme: alt
+      text: One-liners
+      link: /kbaas/oneliners
+    - theme: alt
+      text: Web Security Academy
+      link: /kbaas/websecurityacademy
 
 features:
   - title: System Administration
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean consequat eleifend tempus. 
+    details: Documentation on various projects or Proof of Concepts.
+    icon: 
+      src: /system_administration.png
   - title: Penetration Testing
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean consequat eleifend tempus. 
+    details: Documentation for my day to day tasks.
+    icon: 
+      src: /penetration_testing.png
   - title: CLI-fu
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean consequat eleifend tempus. 
+    details: Cheatsheet for terminal things.
+    icon: 
+      src: /cli-fu.png
   - title:  Training
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean consequat eleifend tempus. 
+    details: Notes of my trainings.
+    icon: 
+      src: /training.png
 
 ---
 
