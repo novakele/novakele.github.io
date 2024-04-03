@@ -30,5 +30,17 @@ $ dig +search +noall +answer -t SRV _ldap._tcp.dc._msdcs.<domain>
 xargs -a <IPs.list> -I{} echo -e "[Route]\nGateway=192.0.2.254\nDestination={}/32\n"
 ```
 
+### Create a port forward to Incus container
+
+```bash
+$ incus config device add CONTAINER_NAME DEVICE_NAME proxy listen=tcp:HOST_IP:HOST_PORT connect=tcp:CONTAINER_IP:CONTAINER_PORT
+```
+
+The following example is used to expose a rogue pyRDP service running in a container to the host LAN
+
+```bash
+$ incus config device add pyrdp pyrdp-3389 proxy listen=tcp:0.0.0.0:3389 connect=tcp:0.0.0.0:3389
+```
+
 
 
