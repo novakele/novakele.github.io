@@ -107,7 +107,7 @@ export default withMermaid({
       language: 'en',
       favicon: `${hostname}/favicon.ico`,
       copyright:
-        'Copyright (c) 2023-present, Christophe Langlois'
+        'Copyright (c) 2022-present, Christophe Langlois'
     })
 
     // You might need to adjust this if your Markdown files 
@@ -128,7 +128,7 @@ export default withMermaid({
         title: frontmatter.title,
         id: `${hostname}${url}`,
         link: `${hostname}${url}`,
-        description: excerpt,
+        description: frontmatter.description,
         content: html,
         author: [
           {

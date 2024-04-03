@@ -3,6 +3,7 @@ title: One-liners
 description: One-liners
 date: 2022-06-21
 ---
+
 # One-liners
 
 ## Objective

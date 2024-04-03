@@ -3,6 +3,7 @@ title: Web Security Academy
 description: Notes for the challenges of Web Security Academy
 date: 2024-04-01
 ---
+
 # Web Security Academy
 
 ## Objective
