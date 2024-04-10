@@ -14,3 +14,4 @@ No categories as it becomes a mess over time. Might as well let it be organic ri
 | Windows ISO | https://massgrave.dev/ |
 | Key Management Services (KMS) client activation and product keys | https://learn.microsoft.com/en-us/windows-server/get-started/kms-client-activation-keys#generic-volume-license-keys-gvlk |
 | Email newsletter to RSS | https://github.com/leafac/kill-the-newsletter |
+| maybe next email server | https://github.com/stalwartlabs/mail-server |
