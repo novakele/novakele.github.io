@@ -39,6 +39,7 @@ export default withMermaid({
             { text: 'Sliver C2', link: '/kbaas/10'},
             { text: 'Cypher queries', link: '/kbaas/cypherqueries'},
             { text: 'Phishing Campaign with GoPhish', link: '/kbaas/11'},
+            { text: 'Over Pass the Hash (OPtH)', link: '/kbaas/13'},
         ]
       },
       { text: 'CLI-fu',
@@ -82,6 +83,8 @@ export default withMermaid({
           { text: 'TL;DR Tooling', link: '/kbaas/8'},
           { text: 'Sliver C2', link: '/kbaas/10'},
           { text: 'Cypher queries', link: '/kbaas/cypherqueries'},
+          { text: 'Phishing Campaign with GoPhish', link: '/kbaas/11'},
+          { text: 'Over Pass the Hash (OPtH)', link: '/kbaas/13'},
       ]
     },
     { text: 'CLI-fu',
