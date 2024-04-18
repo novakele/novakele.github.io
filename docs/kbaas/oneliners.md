@@ -48,5 +48,19 @@ The following example is used to expose a rogue pyRDP service running in a conta
 $ incus config device add pyrdp pyrdp-3389 proxy listen=tcp:0.0.0.0:3389 connect=tcp:0.0.0.0:3389
 ```
 
+### Generate SSH key without a passphrase
+
+> The same command works on Windows also
+
+```shell
+$ ssh-keygen -t ed25519 -f ./unprotected -q -N '""'
+```
+
+### SCP file to a host in an non-interactive shell
+
+```powershell
+PS > scp -o StrictHostKeyChecking=no -i <ssh private key> -P <remote port> <path to file> <username>@<fqdn>:[remote path]
+```
+
 
 
