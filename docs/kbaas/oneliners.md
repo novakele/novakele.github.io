@@ -76,7 +76,7 @@ PS > Add-MpPreference -ExclusionPath '\\tsclient\'
 PS > Set-MpPreference -DisableRealtimeMonitoring $true
 ```
 
-### Get SoftPerfect Network Scanner
+### [WIP] Get SoftPerfect Network Scanner
 
 Commands to execute one line at a time
 
@@ -105,4 +105,13 @@ PS > $encodedCommand = [Convert]::ToBase64String($bytes)
 ```
 
 
+## Start WebDAV client on Windows
+If the WebClient service is set to manual (auto), it can be started by trying to browse a UNC path with an @<port>.
+```powershell
+get-service -name webclient | select -property Name,Status,StartType
+```
+
+```shell
+\\google.com@80\notimportant
+```
 

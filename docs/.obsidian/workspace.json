@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "kbaas/bookmarks.md",
+                "file": "kbaas/15.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "kbaas/bookmarks.md",
+                "file": "kbaas/15.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "kbaas/bookmarks.md",
+                "file": "kbaas/15.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "kbaas/bookmarks.md"
+                "file": "kbaas/15.md"
               }
             }
           }
@@ -147,5 +147,28 @@
     }
   },
   "active": "d35b7323c55a0ff6",
-  "lastOpenFiles": []
+  "lastOpenFiles": [
+    "kbaas/12.md",
+    "kbaas/13.md",
+    "kbaas/15.md",
+    "kbaas/14.md",
+    "index.md",
+    "kbaas/websecurityacademy.md",
+    "kbaas/webapp.md",
+    "kbaas/oneliners.md",
+    "kbaas/cypherqueries.md",
+    "kbaas/bookmarks.md",
+    "kbaas/6.md",
+    "kbaas/7.md",
+    "kbaas/9.md",
+    "kbaas/8.md",
+    "kbaas/5.md",
+    "kbaas/4.md",
+    "kbaas/3.md",
+    "kbaas/2.md",
+    "kbaas/1.md",
+    "kbaas/0.md",
+    "kbaas/10.md",
+    "kbaas/11.md"
+  ]
 }
