@@ -106,7 +106,8 @@ PS > $encodedCommand = [Convert]::ToBase64String($bytes)
 
 
 ## Start WebDAV client on Windows
-If the WebClient service is set to manual (auto), it can be started by trying to browse a UNC path with an @<port>.
+If the WebClient service is set to manual (auto), it can be started by trying to browse a UNC path with an @1-65535.
+
 ```powershell
 get-service -name webclient | select -property Name,Status,StartType
 ```
