@@ -54,6 +54,7 @@ export default withMermaid({
         ]
       },
       { text: 'Bookmarks', link: '/kbaas/bookmarks'},
+      { text: '3D Printing', link: '/kbaas/16'},
     ],
     search: {
         provider: 'local'
@@ -99,6 +100,7 @@ export default withMermaid({
       ]
     },
     { text: 'Bookmarks', link: '/kbaas/bookmarks'},
+     { text: '3D Printing', link: '/kbaas/16'},
     ],
     socialLinks: [
       { icon: 'github', link: 'https://github.com/novakele' },
