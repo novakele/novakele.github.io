@@ -41,6 +41,7 @@ export default withMermaid({
             { text: 'Phishing Campaign with GoPhish', link: '/kbaas/11'},
             { text: 'Over Pass the Hash (OPtH)', link: '/kbaas/13'},
             { text: '[WIP] Dnsmasq for penetration testing', link: '/kbaas/14'},
+            { text: 'SAP', link: '/kbaas/17'},
         ]
       },
       { text: 'CLI-fu',
@@ -87,6 +88,7 @@ export default withMermaid({
           { text: 'Cypher queries', link: '/kbaas/cypherqueries'},
           { text: 'Phishing Campaign with GoPhish', link: '/kbaas/11'},
           { text: 'Over Pass the Hash (OPtH)', link: '/kbaas/13'},
+          { text: 'SAP', link: '/kbaas/17'},
       ]
     },
     { text: 'CLI-fu',
