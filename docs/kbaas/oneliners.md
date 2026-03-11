@@ -116,3 +116,9 @@ get-service -name webclient | select -property Name,Status,StartType
 \\google.com@80\notimportant
 ```
 
+## Parse Hashcat potfile (@twistedsim)
+
+```bash
+perl -ne 'chomp; my @x=split ":"; print $x[-1], "\n";' /srv/hashcat-potfile/hashcat.pot > potfile
+```
+
