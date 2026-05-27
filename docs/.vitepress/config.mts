@@ -21,27 +21,33 @@ export default withMermaid({
     nav: [
       { text: 'System Administration',
         items: [
-            { text: 'SSH point-to-point tunnel', link: '/kbaas/0'},
-            { text: 'Incus DNS resolution with systemd-networkd', link: '/kbaas/1'},
-            { text: 'Samba share with sane defaults', link: '/kbaas/2'},
-            { text: 'Dummy interface to share resources', link: '/kbaas/3'},
-            { text: 'Running Jenkins agent as a service on Windows', link: '/kbaas/4'},
-            { text: 'Download offline .Net Framework target pack', link: '/kbaas/5'},
-            { text: 'Dynamic Docker containers for CTF', link: '/kbaas/7'},
-            { text: 'VPS for egress port testing', link: '/kbaas/9'},
-            { text: 'Manage Workgroup hosts with Server Manager', link: '/kbaas/12'},
+            { text: 'SSH point-to-point tunnel', link: '/kbaas/ssh_ptp_tunnel'},
+            { text: 'Incus DNS resolution with systemd-networkd', link: '/kbaas/incus_dns_systemd-networkd'},
+            { text: 'Samba share with sane defaults', link: '/kbaas/samba_server_sane_defaults'},
+            { text: 'Dummy interface to share resources', link: '/kbaas/dummy_interface'},
+            { text: 'Running Jenkins agent as a service on Windows', link: '/kbaas/running_jenkins_custom_service'},
+            { text: 'Download offline .Net Framework target pack', link: '/kbaas/download_offline_dotnet'},
+            { text: 'Dynamic Docker containers for CTF', link: '/kbaas/dynamic_docker_containers'},
+            { text: 'VPS for egress port testing', link: '/kbaas/vps_egress_checking'},
+            { text: 'Manage Workgroup hosts with Server Manager', link: '/kbaas/worgroup_server_manager'},
+            { text: 'SSH over TLS', link: '/kbaas/tls_wrapper_ssh'},
+
+
+
+            
         ]
       },
       { text: 'Penetration Testing',
         items: [
-            { text: 'Reporting boilerplates', link: '/kbaas/6'},
-            { text: 'TL;DR Tooling', link: '/kbaas/8'},
-            { text: 'Sliver C2', link: '/kbaas/10'},
+            { text: 'Reporting boilerplates', link: '/kbaas/reporting_boilterplates'},
+            { text: 'TL;DR Tooling', link: '/kbaas/tldr_tooling'},
+            { text: 'Sliver C2', link: '/kbaas/sliver_c2'},
             { text: 'Cypher queries', link: '/kbaas/cypherqueries'},
-            { text: 'Phishing Campaign with GoPhish', link: '/kbaas/11'},
-            { text: 'Over Pass the Hash (OPtH)', link: '/kbaas/13'},
-            { text: '[WIP] Dnsmasq for penetration testing', link: '/kbaas/14'},
-            { text: 'SAP', link: '/kbaas/17'},
+            { text: 'Phishing Campaign with GoPhish', link: '/kbaas/phishing_with_gophish'},
+            { text: 'Over Pass the Hash (OPtH)', link: '/kbaas/overpass_the_hash'},
+            { text: '[WIP] Dnsmasq for penetration testing', link: '/kbaas/dnsmasq_for_pentesting'},
+            { text: 'SAP', link: '/kbaas/sap_pentesting'},
+            { text: 'Azure', link: '/kbaas/azure_pentesting'},
         ]
       },
       { text: 'CLI-fu',
@@ -54,8 +60,14 @@ export default withMermaid({
             { text: 'Web Security Academy', link: '/kbaas/websecurityacademy'},
         ]
       },
-      { text: 'Bookmarks', link: '/kbaas/bookmarks'},
-      { text: '3D Printing', link: '/kbaas/16'},
+      { text: 'Miscellaneous',
+        items: [
+            { text: 'Bookmarks', link: '/kbaas/bookmarks'},
+            { text: '3D Printing', link: '/kbaas/3d_printing'},
+            { text: 'Translation', link: '/kbaas/translation'},
+        ]
+      }
+
     ],
     search: {
         provider: 'local'
@@ -67,43 +79,7 @@ export default withMermaid({
             timeStyle: 'medium'
         }
     },
-    sidebar: [
-      { text: 'System Administration',
-      items: [
-          { text: 'SSH point-to-point tunnel', link: '/kbaas/0'},
-          { text: 'Incus DNS resolution with systemd-networkd', link: '/kbaas/1'},
-          { text: 'Samba share with sane defaults', link: '/kbaas/2'},
-          { text: 'Dummy interface to share resources', link: '/kbaas/3'},
-          { text: 'Running Jenkins agent as a service on Windows', link: '/kbaas/4'},
-          { text: 'Download offline .Net Framework target pack', link: '/kbaas/5'},
-          { text: 'Dynamic Docker containers for CTF', link: '/kbaas/7'},
-          { text: 'VPS for egress port testing', link: '/kbaas/9'},
-      ]
-    },
-    { text: 'Penetration Testing',
-      items: [
-          { text: 'Reporting boilerplates', link: '/kbaas/6'},
-          { text: 'TL;DR Tooling', link: '/kbaas/8'},
-          { text: 'Sliver C2', link: '/kbaas/10'},
-          { text: 'Cypher queries', link: '/kbaas/cypherqueries'},
-          { text: 'Phishing Campaign with GoPhish', link: '/kbaas/11'},
-          { text: 'Over Pass the Hash (OPtH)', link: '/kbaas/13'},
-          { text: 'SAP', link: '/kbaas/17'},
-      ]
-    },
-    { text: 'CLI-fu',
-      items: [
-          { text: 'One-liners', link: '/kbaas/oneliners'},
-      ]
-    },
-    { text: 'Training',
-      items: [
-          { text: 'Web Security Academy', link: '/kbaas/websecurityacademy'},
-      ]
-    },
-    { text: 'Bookmarks', link: '/kbaas/bookmarks'},
-     { text: '3D Printing', link: '/kbaas/16'},
-    ],
+    sidebar: [],
     socialLinks: [
       { icon: 'github', link: 'https://github.com/novakele' },
       { icon: {
