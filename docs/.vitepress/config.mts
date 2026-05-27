@@ -58,6 +58,7 @@ export default withMermaid({
       { text: 'Training',
         items: [
             { text: 'Web Security Academy', link: '/kbaas/websecurityacademy'},
+            { text: 'Caido Labs', link: '/kbaas/caido_labs'},
         ]
       },
       { text: 'Miscellaneous',
