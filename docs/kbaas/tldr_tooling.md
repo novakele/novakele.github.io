@@ -176,6 +176,13 @@ $ incus profile device add l2 eth0 nic nictype=macvlan parent=eno1
 incus config device add <VM/Container name> <arbitrary name> usb vendorid=05ac productid=1209
 ```
 
+**Add a port forward (expose port on the host  to a container)**
+
+```bash
+incus config device add ebook port-5000 proxy listen=tcp:192.0.2.250:5000 connect=tcp:127.0.0.1:5000
+incus config device remove ebook port-5000
+```
+
 
 
 
@@ -986,3 +993,34 @@ server {
  }
 ```
 
+
+
+### NodeJS
+
+When developing a Caido plugin, you need `pnpm` and `nvm`
+
+```bash
+nvm install 20 --lts
+pnpm create @caido-community/plugin
+```
+
+
+
+### Caddy
+
+
+
+HTTP reverse proxy
+
+```ini
+http://rss.incus {
+	reverse_proxy 127.0.0.1:7070
+}
+```
+
+### yt-dlp
+
+**for music**
+```bash
+yt-dlp -x --audio-format mp3 --download-archive archive.txt -o "%(playlist_index)s - %(title)s.%(ext)s" "URL"
+```

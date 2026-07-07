@@ -45,3 +45,34 @@ And two mutations for each users.
 **/autorize.php?action=messages** had sensitive messages and were accessible to all authenticated users.
 
 ![image-20260527160713931](./assets/image-20260527160713931.png)
+
+
+
+### Too Many Requests
+The lab asks to find the secret value in a 100 requests.
+Using HTTPQL:
+```sql
+resp.raw.ncont:"Try again"
+```
+
+### ShaSigned
+
+Following up in the previous IDOR lab, the request how has a **hash** data field passed in the POST request.
+
+The **hash** value is the SHA256 or the **user_id={id}**.
+
+To automate this, I used a Convert workflow.
+
+![image-20260527180608475](./assets/image-20260527180608475.png)
+
+
+
+The workflow could have been applied automatically to Automate but it is not available on the free tier.
+
+
+
+### CSRF via Content-Type
+
+
+
+I'll have to read up on this one.
