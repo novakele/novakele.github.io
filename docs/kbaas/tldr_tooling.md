@@ -1024,3 +1024,11 @@ http://rss.incus {
 ```bash
 yt-dlp -x --audio-format mp3 --download-archive archive.txt -o "%(playlist_index)s - %(title)s.%(ext)s" "URL"
 ```
+
+### NFS
+
+When you need to change euid et egid on the fly, use `setpriv`. 
+Check Ippsec "Fries": https://www.youtube.com/watch?v=GZf2Dj6pb0I&t=33s
+```bash
+setpriv --reuid=1000 --regid=1000 --clear-groups
+```
