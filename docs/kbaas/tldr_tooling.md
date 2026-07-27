@@ -995,7 +995,7 @@ server {
 
 
 
-### NodeJS
+## NodeJS
 
 When developing a Caido plugin, you need `pnpm` and `nvm`
 
@@ -1006,7 +1006,7 @@ pnpm create @caido-community/plugin
 
 
 
-### Caddy
+## Caddy
 
 
 
@@ -1018,14 +1018,14 @@ http://rss.incus {
 }
 ```
 
-### yt-dlp
+## yt-dlp
 
 **for music**
 ```bash
 yt-dlp -x --audio-format mp3 --download-archive archive.txt -o "%(playlist_index)s - %(title)s.%(ext)s" "URL"
 ```
 
-### NFS
+## NFS
 
 When you need to change euid et egid on the fly, use `setpriv`. 
 Check Ippsec "Fries": https://www.youtube.com/watch?v=GZf2Dj6pb0I&t=33s
