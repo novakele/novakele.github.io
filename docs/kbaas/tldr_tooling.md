@@ -6,7 +6,13 @@ date: 2023-08-07
 
 # TL;DR Tooling
 
-## Active Directory Certificate Authority (ADCS)
+## Objective
+
+Provide a quick reference for running dayly and not-so-common tools.
+
+## Tooling
+
+### Active Directory Certificate Authority (ADCS)
 
 **ESC8 fuzzer**
 
@@ -14,7 +20,7 @@ https://gist.githubusercontent.com/zblurx/99fe1971562593fd1211931bdc979fbb/raw/6
 
 
 
-## Apache
+### Apache
 
 Boilerplate for reverse HTTP proxy
 ```apache
@@ -32,7 +38,7 @@ Boilerplate for reverse HTTP proxy
 </virtualhost>
 ```
 
-## AWS
+### AWS
 
 Session Manager CLI plugin
 
@@ -40,7 +46,7 @@ Session Manager CLI plugin
 $ aws ssm start-session --profile $PROFILE --target $INSTANCE_ID
 ```
 
-## Caddy
+### Caddy
 
 
 
@@ -52,7 +58,7 @@ http://rss.incus {
 }
 ```
 
-## Certipy
+### Certipy
 
 ```bash
 export KRB5CCNAME=/root/username.ccache
@@ -63,7 +69,7 @@ certipy-ad find -u username@domain.tld -p 'password' -k
 
 
 
-## Cisco VoIP (Should write this as an article)
+### Cisco VoIP (Should write this as an article)
 
 
 
@@ -244,9 +250,9 @@ find . -type f -name 'SP*.cnf.xml' -exec xq --raw-output '.serviceProfile.Direct
 
 
 
-## Database
+### Database
 
-### Postgresql
+#### Postgresql
 
 **create admin user**
 
@@ -283,7 +289,7 @@ host    zitadel zitadel 10.1.194.0/24   scram-sha-256
 host    all     ladmin  0.0.0.0/0       scram-sha-256
 ```
 
-## Dig
+### Dig
 
 **Finding Domain Controllers**
 
@@ -297,7 +303,7 @@ dig any _kerberos._tcp.example.com
 
 
 
-## Git
+### Git
 
 Clone a repo with a specific SSH key
 
@@ -305,7 +311,7 @@ Clone a repo with a specific SSH key
 $ git clone --config core.sshCommand='ssh -i ~/.ssh/<ssh_private_key>' git@<git_server>:<git repo>
 ```
 
-## Google Cloup Platform (GCP)
+### Google Cloup Platform (GCP)
 
 **Query the metadata endpoint**
 
@@ -325,7 +331,7 @@ curl -s -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMeta
 
 
 
-## Impacket
+### Impacket
 
 Check the state of RDP sessions
 
@@ -340,12 +346,6 @@ Enable RestrictedAdmin for PTH RDP
 $ impacket-reg -k -no-pass <domain>/<user>@<host>  add -keyName 'HKLM\System\CurrentControlSet\Control\Lsa' -v 'DisableRestrictedAdmin' -vd 1 -vt REG_DWORD
 ```
 
-
-
-
-
-## Impacket
-
 **getTGT**
 
 ```bash
@@ -353,11 +353,7 @@ impacket-getTGT domain.tld/username:'password'
 # make sure that DNS is working
 ```
 
-
-
-
-
-## Incus
+### Incus
 
 **Quick install**
 
@@ -518,7 +514,7 @@ incus config device remove ebook port-5000
 
 
 
-## Manual Windows Reconnaissance
+### Manual Windows Reconnaissance
 
 > Most of these are really bad OPSEC
 
@@ -534,7 +530,7 @@ Spawn process as domain user on non domain computer
 runas /user:<user>@<domain> /netonly <process>
 ```
 
-## Markdown
+### Markdown
 
 https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts
 
@@ -555,7 +551,7 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
 
 
 
-## NFS
+### NFS
 
 When you need to change euid et egid on the fly, use `setpriv`. 
 Check Ippsec "Fries": https://www.youtube.com/watch?v=GZf2Dj6pb0I&t=33s
@@ -563,7 +559,7 @@ Check Ippsec "Fries": https://www.youtube.com/watch?v=GZf2Dj6pb0I&t=33s
 setpriv --reuid=1000 --regid=1000 --clear-groups
 ```
 
-## NGINX
+### NGINX
 
 **Get snakeoil certificates**
 
@@ -741,7 +737,7 @@ server {
 
 
 
-## Nmap
+### Nmap
 
 **Private IP ranges gateway scan**
 
@@ -760,7 +756,7 @@ nmap -iL ./gateways.list -sn -oA ./nmap/possible_gateways --min-rate 10000
 
 
 
-## NodeJS
+### NodeJS
 
 When developing a Caido plugin, you need `pnpm` and `nvm`
 
@@ -771,7 +767,7 @@ pnpm create @caido-community/plugin
 
 
 
-## O365
+### O365
 
 - Download the fat clients @ [My account](https://portal.office.com/account/?ref=Harmony)
 
@@ -785,11 +781,8 @@ contentclass:STS_Site
 
 
 
-## Objective
 
-Provide a quick reference for running dayly and not-so-common tools.
-
-## OpenSSL
+### OpenSSL
 
 **Generate secure strings for passwords**
 
@@ -806,7 +799,7 @@ openssl x509 -req -days 3650 -in tls.csr -signkey tls.key -out tls.crt
 
 ```
 
-## Rubeus
+### Rubeus
 
 Load TGT from NT || AES256 hash
 
@@ -845,7 +838,7 @@ dig _kerberos._tcp.EXAMPLE.COM -t any
 
 
 
-## SSH
+### SSH
 
 **Common SSH block options**
 
@@ -896,7 +889,7 @@ ss -tulpn | grep 127.0.0.1 | awk '{print $5}' | cut -d ':' -f2 | sort -uV | tail
 
 
 
-## Systemd-networkd
+### Systemd-networkd
 
 Adding route blocks based off a list of networks
 
@@ -906,7 +899,7 @@ xargs -a networks/possible_gateways.list -I{} echo -e "[Route]\nGateway=192.0.2.
 
 
 
-## TMUX
+### TMUX
 
 <= 2.0
 
@@ -929,7 +922,7 @@ Reload configuration file
 CTRL-a source ~/.tmux.conf
 ```
 
-## User management
+### User management
 
 Create a group
 ```shell
@@ -941,8 +934,8 @@ Create a system user
 $ sudo useradd -c "system user" --gid <name> --no-create-home --no-user-group -s /usr/sbin/nologin --system
 ```
 
-## Windows
-### Packet Forward
+### Windows
+#### Packet Forward
 
 ```powershell
 PS> Get-NetIPInterface | select ifIndex,InterfaceAlias,AddressFamily,ConnectionState,Forwarding | Sort-Object -Property IfIndex | Format-Table
@@ -955,13 +948,13 @@ PS> Set-Service RemoteAccess -StartupType Automatic; Start-Service RemoteAccess
 
 
 
-### RDP
+#### RDP
 
 Connect to a AAD joined PC with a AAD account:
 
 `AzureAD\username@domain.tld`
 
-## WSL2
+### WSL2
 
 **Build a custom kernel**
 
@@ -999,7 +992,7 @@ kernelModule=c:\\wsl\modules.vhdx # requires version 2.5+
 
 ```
 
-## xinetd
+### xinetd
 
 Simple TCP forward
 
@@ -1018,14 +1011,14 @@ service smdb_forward
 }
 ```
 
-## yt-dlp
+### yt-dlp
 
 **for music**
 ```bash
 yt-dlp -x --audio-format mp3 --download-archive archive.txt -o "%(playlist_index)s - %(title)s.%(ext)s" "URL"
 ```
 
-## ~/.bashrc
+### ~/.bashrc
 
 **Check if a string is in PATH if not, add it**
 ```bash
