@@ -835,16 +835,28 @@ dig _kerberos._tcp.EXAMPLE.COM -t any
 ```
 
 
+### Screen
 
+Bring back the **ctrl+a** behavior. 
+Rebinds command prefix of `screen` from **ctrl+a** to **ctrl+`**
+```
+# ~/.screenrc
+escape ``
+```
 
 
 ### SSH
 
-**Common SSH block options**
+#### Common SSH block options
 
 ```
 host *
 	addkeystoagent yes
+    ControlMaster auto
+    # Make sure to create the control directory
+    # mkdir -pv ~/.ssh/control
+    ControlPath ~/.ssh/control/%h_%p_%r
+    ControlPersist 10m
 	
 host reverse
 	forwardagent yes
@@ -870,7 +882,7 @@ host engagement
 
 ```
 
-**~/.ssh/authorized_keys**
+#### ~/.ssh/authorized_keys
 
 https://manpages.debian.org/unstable/openssh-server/authorized_keys.5.en.html
 
@@ -879,10 +891,40 @@ https://manpages.debian.org/unstable/openssh-server/authorized_keys.5.en.html
 #expiry-time="20250822",no-pty,port-forwarding,permitlisten="localhost:3389",command="/usr/sbin/nologin" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGe0Ryfm9hgYoCb9tJxKOEuYrVlBHh8o3dYUHbMWUD6o
 ```
 
-**Bad way of bulk checking callbacks**
+#### Bad way of bulk checking callbacks
 
 ```bash
 ss -tulpn | grep 127.0.0.1 | awk '{print $5}' | cut -d ':' -f2 | sort -uV | tail -n 14 | xargs -I{} bash -c "ssh localhost -oStrictHostKeyChecking=no -ouserknownhostsfile=/dev/null -p {} 'ip -br a | grep '10.10.1' && echo {}' || echo no"
+```
+
+#### ssh-agent on Sway (Wayland)
+
+```
+systemctl edit --full --force ssh-agent --user
+```
+
+
+```
+# /home/luser/.config/systemd/user/ssh-agent.service
+[Unit]
+ConditionEnvironment=!SSH_AGENT_PID
+Description=OpenSSH key agent
+Documentation=man:ssh-agent(1) man:ssh-add(1) man:ssh(1)
+
+[Service]
+Environment=SSH_AUTH_SOCK=%t/ssh-agent.socket
+ExecStart=/usr/bin/ssh-agent -D -a ${SSH_AUTH_SOCK}
+SuccessExitStatus=2
+Type=simple
+
+[Install]
+WantedBy=default.target
+
+```
+
+Add to `~/.bashrc`
+```
+export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/ssh-agent.socket"
 ```
 
 
