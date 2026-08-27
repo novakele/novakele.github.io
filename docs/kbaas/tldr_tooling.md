@@ -1062,9 +1062,37 @@ yt-dlp -x --audio-format mp3 --download-archive archive.txt -o "%(playlist_index
 
 ### ~/.bashrc
 
-**Check if a string is in PATH if not, add it**
+#### Check if a string is in PATH if not, add it
 ```bash
 HOME_BIN="/home/luser/bin"
 [[ ":$PATH:" != *":$HOME_BIN:"* ]] && export PATH="$PATH:$HOME_BIN"
 ```
 
+#### Enable logging and save command history at runtime
+
+```
+# Configure `history` to have timestamps in ISO8601 format
+HISTTIMEFORMAT="%FT%T "
+# append each command to ~/.bash_history when executed
+PROMPT_COMMAND="history -a; history -r; echo"
+
+# Add new line before command prompt for cleaner screen captures (GH issue #42)
+PS1="${PS1::-3}\n\$ "
+
+# Logging toggle
+export LOGGING_ENABLED=1
+
+# Log all commands per interactive session
+if [[ $- == *i* ]] && [[ -z "$SCRIPT_LOGGED" ]] && [[ "$LOGGING_ENABLED" == "1" ]]; then
+    export SCRIPT_LOGGED=1
+    LOGFILE="$HOME/bash_logs/$(date +%F_%H-%M).log"
+    mkdir -p "$HOME/bash_logs"
+    exec script -q -f -a "$LOGFILE"
+fi
+
+# Log all screen
+if [[ "$LOGGING_ENABLED" == "1" ]]; then
+  alias screen='/usr/bin/screen -L -Logfile $HOME/bash_logs/screen_$(date +%F_%H-%M-%S).log'
+fi
+
+```
