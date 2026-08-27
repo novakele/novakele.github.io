@@ -295,10 +295,10 @@ host    all     ladmin  0.0.0.0/0       scram-sha-256
 
 ```bash
 # LDAP
-dig any _ldap._tcp.dc._msdcs.example.com
+dig +noall +answer any _ldap._tcp.dc._msdcs.example.com
 
-# Kerberos
-dig any _kerberos._tcp.example.com
+Kerberos
+dig +noall +answer any _kerberos._tcp.example.com
 ```
 
 
@@ -355,7 +355,7 @@ impacket-getTGT domain.tld/username:'password'
 
 ### Incus
 
-**Quick install**
+#### Quick install
 
 ```bash
 $ curl -fsSL https://pkgs.zabbly.com/get/incus-stable | sudo sh
@@ -364,16 +364,15 @@ $ apt-get --install-recommends install curl python3 xorriso spice-client-gtk
 
 
 
-**Share a folder with a container**
+#### Share a folder with a container
 
 ```bash
 $ incus config device add <instance_name> <device_name> disk source=<path_on_host> path=<path_in_instance>
 ```
 
-**Blog init**
+#### Blog init
 
-```bash
-$ incus profile show blog
+```yaml
 config:
   raw.idmap: both 1000 0
   user.user-data: |
@@ -415,10 +414,9 @@ $ cd /blog
 $ npm run docs:build
 ```
 
-**Windows VM with TPM**
+#### Windows VM with TPM
 
-```bash
-$ incus profile show windows
+```yaml
 config:
   limits.cpu: "4"
   limits.memory: 4GiB
@@ -441,9 +439,9 @@ project: default
 
 ```
 
-**Pentest profile**
+#### Pentest profile
 
-```bash
+```yaml
 config:
   raw.idmap: |-
     uid 1000 0
@@ -480,36 +478,88 @@ project: default
 
 ```
 
-**Adding DNS records to a network**
+#### Adding DNS records to a network
 
 ```bash
 $ incus network edit incusbr0
+```
+
+```yaml
 config:
   raw.dnsmasq: |
     srv-host=_VLMCS._tcp.incus,kms.incus,1688,0,5
 
 ```
 
-**Create L2 profile for Responder**
+#### Create L2 profile for Responder
 
 ```bash
 # incus profile device add ${profile_name} ${name_of_the_nic_inside_container} nic nictype=macvlan parent=${physical_lan_nic}
 $ incus profile device add l2 eth0 nic nictype=macvlan parent=eno1
 ```
 
-**Pass USB device to VM or Container**
+#### Pass USB device to VM or Container
 
 ```bash
 incus config device add <VM/Container name> <arbitrary name> usb vendorid=05ac productid=1209
 ```
 
-**Add a port forward (expose port on the host  to a container)**
+#### Add a port forward (expose port on the host  to a container)
 
 ```bash
 incus config device add ebook port-5000 proxy listen=tcp:192.0.2.250:5000 connect=tcp:127.0.0.1:5000
 incus config device remove ebook port-5000
 ```
 
+#### Share Wayland socket with container for eazy copy/paste
+```yaml
+config:
+  raw.idmap: |-
+    uid 1000 0
+    gid 1000 0
+  user.user-data: |
+    #cloud-config
+    package_update: true
+    packages:
+      - curl
+      - unzip
+      - git
+      - screen
+      - vim
+      - wl-clipboard
+    runcmd:
+      - mkdir -pv /etc/vim
+      - curl -o /etc/vim/vimrc.local https://raw.githubusercontent.com/amix/vimrc/master/vimrcs/basic.vim
+      - echo 'alias ll="ls -l"' >> /root/.bashrc
+      - echo 'PROMPT_COMMAND="history -a;history -r;echo"' >> /root/.bashrc
+      - /usr/bin/bash -c "cd /tmp/;curl -L https://github.com/homeport/termshot/releases/download/v0.6.1/termshot_0.6.1_linux_amd64.tar.gz --silent | tar xz;mv termshot /usr/sbin"
+      - bash -c "base64 -d <<< 'ZnVuY3Rpb24gLHNjcmVlbnNob3QoKSB7CiAgICBsb2NhbCBydW5uaW5nX2NvbW1hbmQ9IiR7QH0iCiAgICBsb2NhbCBzb2Z0d2FyZT0iJHtydW5uaW5nX2NvbW1hbmQlJSAqfSIKICAgIGxvY2FsIG91dHB1dGZpbGU9IiR7c29mdHdhcmV9XyQoZGF0ZSArJyVZLSVtLSVkXyVILSVNLSVTJykucG5nIgogICAgL3Vzci9zYmluL3Rlcm1zaG90IC1jIC1DIDEyMCAtLW5vLWRlY29yYXRpb24gLS1uby1zaGFkb3cgLXMgLWYgIiR7b3V0cHV0ZmlsZX0iICIke3J1bm5pbmdfY29tbWFuZH0iCiAgICB3bC1jb3B5IDwgIiR7b3V0cHV0ZmlsZX0iCiAgICAjeGNsaXAgLXNlbGVjdGlvbiBjbGlwYm9hcmQgLXQgaW1hZ2UvcG5nIC1pICIke291dHB1dGZpbGV9IgoKCn0KCmZ1bmN0aW9uICxzY3JlZW5zaG90X2xvZ3MoKSB7CiAgICBsb2NhbCBydW5uaW5nX2NvbW1hbmQ9IiR7QH0iCiAgICBsb2NhbCBzb2Z0d2FyZT0iJHtydW5uaW5nX2NvbW1hbmQlJSAqfSIKICAgIGxvY2FsIG91dHB1dGZpbGU9IiR7c29mdHdhcmV9XyQoZGF0ZSArJyVZLSVtLSVkXyVILSVNLSVTJykucG5nIgogICAgL3Vzci9zYmluL3Rlcm1zaG90IC1DIDEyMCAtLW5vLWRlY29yYXRpb24gLS1uby1zaGFkb3cgLXMgLWYgIiR7b3V0cHV0ZmlsZX0iIC0tICIke3J1bm5pbmdfY29tbWFuZH0iCiAgICB3bC1jb3B5IDwgIiR7b3V0cHV0ZmlsZX0iCiAgICAjeGNsaXAgLXNlbGVjdGlvbiBjbGlwYm9hcmQgLXQgaW1hZ2UvcG5nIC1pICIke291dHB1dGZpbGV9IgoKCn0KCg==' | tee -a /root/.bashrc"
+      - echo "export XDG_RUNTIME_DIR=/run" >> /root/.bashrc
+      - echo "export WAYLAND_DISPLAY=wayland-1" >> /root/.bashrc
+description: Wayland socket sharing and termshot config
+devices:
+  eth0:
+    name: eth0
+    network: incusbr0
+    type: nic
+  root:
+    path: /
+    pool: default
+    type: disk
+  wayland:
+    bind: instance
+    connect: unix:/run/user/1000/wayland-1
+    gid: "1000"
+    listen: unix:/run/wayland-1
+    mode: "0660"
+    type: proxy
+    uid: "1000"
+name: screenshot
+used_by:
+  - /1.0/instances/testytototo
+project: default
+
+```
 
 
 
@@ -1094,5 +1144,32 @@ fi
 if [[ "$LOGGING_ENABLED" == "1" ]]; then
   alias screen='/usr/bin/screen -L -Logfile $HOME/bash_logs/screen_$(date +%F_%H-%M-%S).log'
 fi
+
+```
+
+#### Terminal screen captures on Sway/Wayland
+
+```bash
+function ,screenshot() {
+    local running_command="${@}"
+    local software="${running_command%% *}"
+    local outputfile="${software}_$(date +'%Y-%m-%d_%H-%M-%S').png"
+    /usr/sbin/termshot -c -C 120 --no-decoration --no-shadow -s -f "${outputfile}" "${running_command}"
+    wl-copy < "${outputfile}"
+    #xclip -selection clipboard -t image/png -i "${outputfile}"
+
+
+}
+
+# Generates a screenshot of a text file
+# Usage ",screenshot_logs cat icmp_scan.nmap"
+function ,screenshot_logs() {
+    local running_command="${@}"
+    local software="${running_command%% *}"
+    local outputfile="${software}_$(date +'%Y-%m-%d_%H-%M-%S').png"
+    /usr/sbin/termshot -C 120 --no-decoration --no-shadow -s -f "${outputfile}" -- "${running_command}"
+    wl-copy < "${outputfile}"
+    #xclip -selection clipboard -t image/png -i "${outputfile}"
+}
 
 ```
