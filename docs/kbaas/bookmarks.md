@@ -24,3 +24,4 @@ No categories as it becomes a mess over time. Might as well let it be organic ri
 |                                                                  | https://troopers.de/downloads/troopers19/TROOPERS19_AD_Fun_With_LDAP.pdf                                                 |                  |
 |                                                                  | https://www.n00py.io/2020/12/alternative-ways-to-pass-the-hash-pth/                                                      |                  |
 |                                                                  | https://github.com/zyn3rgy/LdapRelayScan                                                                                 |                  |
+| MTG decks for learning | https://tappedout.net/mtg-decks/mono-colored-beginner-decks/?cb=1553748501  |

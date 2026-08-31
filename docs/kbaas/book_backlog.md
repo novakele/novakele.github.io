@@ -17,3 +17,5 @@ For reading at night, I'm trying a new gadget [Glocusent Upgraded Bookmark Style
 ### [La Bête contre les murs](https://www.renaud-bray.com/Livres_Produit.aspx?id=4109731)  (2026-08-31)
 
 ### [DOPEamine](https://heyitsjesse.com/#poetry-book) (2026-08-31)
+
+### [Le Livre des Étoiles](https://booknode.com/serie/le-livre-des-etoiles) (2026-08-31)
