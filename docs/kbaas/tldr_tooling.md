@@ -302,7 +302,6 @@ dig +noall +answer any _kerberos._tcp.example.com
 ```
 
 
-
 ### Git
 
 Clone a repo with a specific SSH key
@@ -848,6 +847,17 @@ openssl req -new -key tls.key -out tls.csr
 openssl x509 -req -days 3650 -in tls.csr -signkey tls.key -out tls.crt
 
 ```
+
+### Ping Castle
+
+#### Running the binary from a non-domain joined computer
+
+```powershell
+runas /user:user@domain.tld /netonly cmd.exe
+PingCastle.exe
+
+```
+
 
 ### Rubeus
 

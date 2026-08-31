@@ -75,4 +75,21 @@ m620 s255
 ```
 
 
+## Common Prints
 
+### Ear tunnel
+
+**26mm**
+
+[Tear Drop Tunnel Ear Gauges 10-40mm Multiple Plate](https://makerworld.com/en/models/951761-tear-drop-tunnel-ear-gauges-10-40mm-multiple-plate#profileId-919863)
+
+
+### Oil/Fuel measuring cup
+[Measuring Cup Beaker Generator](https://makerworld.com/en/models/2311424-measuring-cup-beaker-generator?from=search#profileId-2523437)
+
+[OIL MIX CHART](https://www.lightningkarts.com.au/index.php?select=51)
+
+
+### 40:1 on a 5L
+
+125ML

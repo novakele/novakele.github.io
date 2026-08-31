@@ -66,6 +66,7 @@ export default withMermaid({
             { text: 'Bookmarks', link: '/kbaas/bookmarks'},
             { text: '3D Printing', link: '/kbaas/3d_printing'},
             { text: 'Translation', link: '/kbaas/translation'},
+            { text: 'Book Backlog', link: '/kbaas/book_backlog'},
         ]
       }
 
