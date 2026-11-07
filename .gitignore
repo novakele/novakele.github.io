@@ -2,3 +2,29 @@ node_modules
 docs/.vitepress/cache
 docs/.vitepress/dist
 .obsidian
+# Vault password and secrets
+.vault_pass
+*.vault_pass
+*.key
+*.pem
+
+# Ansible runtime artifacts
+.ansible/
+*.retry
+ansible.log
+
+# Collections and roles installed locally (restore with ansible-galaxy)   collections/ansible_collections/
+roles/*/
+!roles/requirements.yml
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Editors and OS
+.idea/
+.vscode/
+*.swp
+.DS_Store

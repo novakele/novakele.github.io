@@ -1,0 +1,65 @@
+---
+- name: Container baseline
+  hosts: localhost
+  connection: local
+  become: true
+  vars:
+    prompt: 'PROMPT_COMMAND="history -a;history -r;echo"'
+    termshot_version: 0.6.1
+  tasks:
+    - name: Share bash history across sessions
+      ansible.builtin.lineinfile:
+        path: "{{ item }}"
+        line: "{{ prompt }}"
+        create: true
+        mode: "0644"
+      loop:
+        - /root/.bashrc
+        - /etc/skel/.bashrc
+    
+    - name: Install must have packages
+      ansible.builtin.apt:
+        name:
+          - curl
+          - git
+          - vim
+          - unzip
+          - screen
+          - less
+          - wl-clipboard
+          - 7zip
+        state: present
+        update_cache: true
+        cache_valid_time: 86400
+      
+    - name: Create vim config directory
+      ansible.builtin.file:
+        path: /etc/vim
+        state: directory
+        mode: "0755"
+
+    - name: Configure system-wide vimrc 
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/amix/vimrc/master/vimrcs/basic.vim
+        dest: /etc/vim/vmrc.local
+        mode: "0644"
+
+    - name: Configure Wayland for screenshot
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: /etc/profile.d/wayland.sh
+        mode: "0644"
+      loop:
+        - wayland.sh
+        - ssh-agent.sh
+
+    - name: Install termshot
+      ansible.builtin.unarchive:
+        src: "https://github.com/homeport/termshot/releases/download/v{{ termshot_version }}/termshot_{{ termshot_version }}_linux_amd64.tar.gz"
+        dest: /usr/local/bin
+        remote_src: true
+        include: [termshot]
+        mode: "0755"
+        creates: /usr/local/bin/termshot    
+
+

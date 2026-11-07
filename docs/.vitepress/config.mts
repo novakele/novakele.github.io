@@ -31,6 +31,7 @@ export default withMermaid({
             { text: 'VPS for egress port testing', link: '/kbaas/vps_egress_checking'},
             { text: 'Manage Workgroup hosts with Server Manager', link: '/kbaas/worgroup_server_manager'},
             { text: 'SSH over TLS', link: '/kbaas/tls_wrapper_ssh'},
+            { text: 'Incus', link: '/kbaas/incus'},
 
 
 

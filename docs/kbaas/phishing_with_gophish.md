@@ -130,6 +130,15 @@ Use the "all providers" list to deny Cloud IPs
 https://github.com/rezmoss/cloud-provider-ip-addresses
 
 
+### Removing some known IOCs
+
+https://github.com/0xQRx/Gophish_Customization.git
+
+```bash
+/patch.sh --path ../gophish/ --x-contact-header "X-New-Contact" --x-signature-header "X-New-Signature" --server-name "server --recipient-parameter "produits" --rid-length 12"
+```
+
+
 
 ## Nginx example
 
@@ -279,38 +288,116 @@ Configuration file at /etc/nftables.conf
 ```bash
 #!/usr/sbin/nft -f
 
-flush ruleset
+define WAN = "wlp1s0"          # your public interface — check with: ip -br link
+define HFCTF = 10.46.184.59
+define MAIL = 10.157.134.15
+define HTB = 10.46.184.221
+
+table inet filter
+delete table inet filter
+table ip nat
+delete table ip nat
 
 table inet filter {
     chain input {
         type filter hook input priority 0; policy drop;
 
-        # Allow established/related connections
         ct state established,related accept
+        ct state invalid drop
 
-        # Allow loopback
         iif lo accept
+        iifname "incusbr0" accept
 
-        # Allow ping (icmp + icmpv6)
         ip  protocol icmp   accept
         ip6 nexthdr  icmpv6 accept
 
-        # Allow specific TCP ports
-        tcp dport { 22, 25, 80, 443 } accept
-        #tcp dport { 22 } accept
-
-        # Drop invalid packets
-        ct state invalid drop
+        tcp dport 22 accept
+        tcp dport 8000 accept
     }
 
     chain forward {
         type filter hook forward priority 0; policy drop;
+
+        ct state established,related accept
+        ct state invalid drop
+
+        # Anything our prerouting rules DNATed (only the ports listed below)
+        ct status dnat accept
+
+        # Containers -> outside
+        iifname "incusbr0" accept
     }
 
     chain output {
         type filter hook output priority 0; policy accept;
     }
 }
+
+table ip nat {
+    chain prerouting {
+        type nat hook prerouting priority dstnat; policy accept;
+
+        iifname $WAN dnat ip to tcp dport map {
+            80   : $HFCTF,
+            445  : $HFCTF,
+            # 465  : $MAIL,   # SMTPS submission
+            # 587  : $MAIL,   # submission (STARTTLS)
+            # 993  : $MAIL,   # IMAPS
+            # 143  : $MAIL, # IMAP (STARTTLS)
+            # 995  : $MAIL, # POP3S
+            # 4190 : $MAIL, # ManageSieve
+        }
+        iifname "client1" dnat ip to tcp dport map {
+            80   : $HFCTF,
+            445  : $HFCTF,
+            # 465  : $MAIL,   # SMTPS submission
+        }
+
+        iifname "tun0" dnat ip to tcp dport map {
+            80  :  $HTB,
+            8000  :  $HTB,
+            }
+    }
+}
+
+table inet incus {
+        set bridges {
+                type ifname
+                elements = { "incusbr0" }
+        }
+
+        chain pstrt.incusbr0 {
+                type nat hook postrouting priority srcnat; policy accept;
+                ip saddr 10.46.184.0/24 oifname @bridges accept
+                ip saddr 10.46.184.0/24 ip daddr != 10.46.184.0/24 masquerade
+        }
+
+        chain fwd.incusbr0 {
+                type filter hook forward priority filter; policy accept;
+                ip version 4 oifname "incusbr0" accept
+                ip version 4 iifname "incusbr0" accept
+        }
+
+        chain in.incusbr0 {
+                type filter hook input priority filter; policy accept;
+                iifname "incusbr0" tcp dport 53 accept
+                iifname "incusbr0" udp dport 53 accept
+                iifname "incusbr0" icmp type { destination-unreachable, time-exceeded, parameter-problem } accept
+                iifname "incusbr0" udp dport 67 accept
+                iifname "incusbr0" ip protocol udp udp checksum set 0
+        }
+
+        chain out.incusbr0 {
+                type filter hook output priority filter; policy accept;
+                oifname "incusbr0" tcp sport 53 accept
+                oifname "incusbr0" udp sport 53 accept
+                oifname "incusbr0" icmp type { destination-unreachable, time-exceeded, parameter-problem } accept
+                oifname "incusbr0" udp sport 67 accept
+                oifname "incusbr0" ip protocol udp udp checksum set 0
+        }
+}
+
+
 
 ```
 
@@ -348,4 +435,3 @@ Add a port forward from host to incus container
 ```bash
 incus config device add mailpit port-25 proxy listen=tcp:0.0.0.0:25 connect=tcp:127.0.0.1:1025
 ```
-

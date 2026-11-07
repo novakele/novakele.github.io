@@ -273,7 +273,7 @@ GRANT ALL PRIVILEGES on DATABASE zitadel to zitadel;
 
 ```postgresql
 \l
-```
+```cra
 
 **Show all users and their privileges**
 
@@ -299,6 +299,35 @@ dig +noall +answer any _ldap._tcp.dc._msdcs.example.com
 
 Kerberos
 dig +noall +answer any _kerberos._tcp.example.com
+```
+
+### Desktop shortcuts (rofi drun)
+
+- ~/.local/share/applications/vscode-kbaas.desktop
+- /usr/share/appplications/vscode-kbass.desktop
+
+```ini
+[Desktop Entry]
+Type=Application
+Name=KBaaS (blog)
+Comment=Open novakele.github.io/docs/kbaas in VS Code over SSH
+Exec=/usr/bin/code --folder-uri vscode-remote://ssh-remote+blog/var/www/novakele.github.io/docs/kbaas/
+Icon=code
+Terminal=false
+Categories=Development;
+StartupWMClass=Code
+```
+
+```ini
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=RDP to QA.incus
+Comment=Remote Desktop connection to qa.incus
+Exec=/usr/bin/xfreerdp3 /v:"qa.incus" /u:admin /dynamic-resolution /p:changeme /drive:share,/home/luser/Documents/mandates/rdp_share /sec:tls /cert:ignore /log-level:off
+Terminal=false
+Categories=Utility;Development;
+
 ```
 
 
@@ -560,6 +589,21 @@ project: default
 
 ```
 
+#### Building an image from an ISO
+
+```bash
+incus storage volume import default ~/Downloads/ubuntu-18.04.6-live-server-amd64.iso ubuntu-iso-volume --type=iso
+incus init ubuntu-iso-vm --empty --vm -c limits.cpu=4 -c limits.memory=8GiB -d root,size=50GiB
+incus config device add ubuntu-iso-vm iso-volume disk pool=default source=ubuntu-iso-volume boot.priority=10
+incus start ubuntu-iso-vm
+incus config device add ubuntu-iso-vm agent disk source=agent:config
+$ sudo mount /dev/cdrom /mnt
+$ bash /mnt/install.sh
+
+incus publish ubuntu-iso-vm
+incus image alias create ubuntu1804 'image hash'
+```
+
 
 
 
@@ -599,6 +643,21 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
 > Advises about risks or negative outcomes of certain actions.
 
 
+### NetExec
+
+#### Query JSON output of spider_plus for partial string match
+```
+jq '.[] | keys | to_entries[] | select(.value | test("config";"i"))' nxc/spider_plus/*.json
+```
+
+
+#### LDAP query to look for Computers created with Pre-Windows 2000
+
+```bash
+netexec ldap <DC_IP> -u <user> -p <pass> --query '(&(objectClass=computer)(userAccountControl=4128)(logonCount=0))' 'cn'
+```
+
+https://github.com/garrettfoster13/pre2k
 
 ### NFS
 
@@ -858,6 +917,230 @@ PingCastle.exe
 
 ```
 
+### PowerShell
+
+#### Disable AV and Security tools
+
+```powershell
+# Define the script to run with admin privileges
+if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+    throw "Script must be run as Administrator."
+}
+
+Write-Host "Starting Windows Hardening/Disabling Script..." -ForegroundColor Cyan
+
+# 1. Microsoft Defender (Microsoft Security Center)
+Write-Host "Configuring Microsoft Defender..." -ForegroundColor Yellow
+$defenderPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows Defender"
+$mpPath = "HKLM:\SOFTWARE\Microsoft\Windows Defender"
+
+# Ensure Policy Key Exists
+New-Item -Path $defenderPath -Force | Out-Null
+
+# Disable Tamper Protection (Prevents Defender from re-enabling itself)
+Set-ItemProperty -Path $defenderPath -Name "TamperProtection" -Value "Off" -Type String
+
+# Disable Real-Time Protection
+Set-MpPreference -DisableRealtimeMonitoring $true
+
+# Disable Cloud-Delivered Protection
+Set-MpPreference -DisableCloudProtection $true
+
+# Disable Automatic Sample Submission
+Set-MpPreference -SubmitSamplesConsent DONT_SUBMIT
+
+# Disable Behavioral Monitoring
+Set-MpPreference -EnableControlledFolderAccess Disabled
+
+# Disable Scan On Access
+Set-MpPreference -EnableScanOnAccess $false
+
+# Disable Map Scanning
+Set-MpPreference -DisableMapScanning $true
+
+# Disable Archive Scanning
+Set-MpPreference -DisableArchiveScanning $true
+
+# Disable IO Protection
+Set-MpPreference -EnableIOProtection $false
+
+# Disable Network Inspection System
+Set-MpPreference -EnableNetworkInspectionSystem $false
+
+# Disable Potential Quality Issues
+Set-MpPreference -PUAProtection Disabled
+
+# Add Exclusions for C:\ and \\tsclient
+# Note: Excluding the root drive C:\ is aggressive and may interfere with system files if not careful, 
+# but for a dev/test image, this ensures no background scanning.
+Write-Host "Adding Exclusions..." -ForegroundColor Yellow
+# Clear existing exclusions to avoid duplicates on re-run
+Remove-ItemProperty -Path $mpPath -Name "ExclusionPaths" -ErrorAction SilentlyContinue
+Remove-ItemProperty -Path $mpPath -Name "ExclusionPaths" -ErrorAction SilentlyContinue
+
+# Set Exclusions
+# \\tsclient is the UNC path for RDP drives, but for local mapping, we usually exclude the mapped drive letters.
+# However, the user specifically asked for \\tsclient. 
+# We will add C:\ and \\tsclient\* (wildcard for contents)
+Set-MpPreference -ExclusionPath "C:\", "\\tsclient\*"
+
+# Verify Exclusions
+$exclusions = Get-MpPreference | Select-Object -ExpandProperty ExclusionPaths
+Write-Host "Current Exclusions: $($exclusions -join ', ')" -ForegroundColor Green
+
+# 2. Windows Defender Application Control (WDAC)
+Write-Host "Disabling WDAC..." -ForegroundColor Yellow
+# Remove any existing WDAC policies
+Remove-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\CodeIntegrity" -Recurse -Force -ErrorAction SilentlyContinue
+
+# 3. Credential Guard & HVCI (Memory Integrity)
+Write-Host "Disabling Credential Guard and HVCI..." -ForegroundColor Yellow
+$deviceGuardPath = "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard"
+New-Item -Path $deviceGuardPath -Force | Out-Null
+
+# Disable VBS
+Set-ItemProperty -Path $deviceGuardPath -Name "EnableVirtualizationBasedSecurity" -Value 0 -Type DWord
+# Disable HVCI
+Set-ItemProperty -Path $deviceGuardPath -Name "HVCISupportType" -Value 0 -Type DWord
+# Disable Credential Guard
+Set-ItemProperty -Path $deviceGuardPath -Name "CredentialGuardEnabled" -Value 0 -Type DWord
+
+# 4. Windows Firewall
+Write-Host "Disabling Windows Firewall..." -ForegroundColor Yellow
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+
+# 5. Windows Update
+Write-Host "Disabling Windows Update..." -ForegroundColor Yellow
+$wuPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
+New-Item -Path $wuPath -Force | Out-Null
+Set-ItemProperty -Path $wuPath -Name "SetDisableWUAccess" -Value 1 -Type DWord
+Set-ItemProperty -Path $wuPath -Name "ExcludeWUDriversInQualityUpdate" -Value 1 -Type DWord
+
+# Disable Automatic Updates via AU
+$auPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update"
+New-Item -Path $auPath -Force | Out-Null
+Set-ItemProperty -Path $auPath -Name "AUOptions" -Value 1 -Type DWord # 1 = Never check
+
+# 6. Telemetry & Diagnostics
+Write-Host "Disabling Telemetry..." -ForegroundColor Yellow
+$telemetryPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection"
+New-Item -Path $telemetryPath -Force | Out-Null
+Set-ItemProperty -Path $telemetryPath -Name "AllowTelemetry" -Value 1 -Type DWord # 1 = Security
+
+# Disable Activity Feed
+$systemPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System"
+New-Item -Path $systemPath -Force | Out-Null
+Set-ItemProperty -Path $systemPath -Name "EnableActivityFeed" -Value 0 -Type DWord
+Set-ItemProperty -Path $systemPath -Name "PublishUserActivities" -Value 0 -Type DWord
+Set-ItemProperty -Path $systemPath -Name "UploadUserActivities" -Value 0 -Type DWord
+
+# Disable App Diagnostics
+$appDiagnosticsPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppDiagnostics"
+New-Item -Path $appDiagnosticsPath -Force | Out-Null
+Set-ItemProperty -Path $appDiagnosticsPath -Name "State" -Value 0 -Type DWord
+
+# 7. SmartScreen (All Browsers/Explorer)
+Write-Host "Disabling SmartScreen..." -ForegroundColor Yellow
+$smartScreenPaths = @(
+    "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System",
+    "HKLM:\SOFTWARE\Policies\Microsoft\Edge",
+    "HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Main",
+    "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer"
+)
+
+# System-wide SmartScreen
+New-Item -Path $smartScreenPaths[0] -Force | Out-Null
+Set-ItemProperty -Path $smartScreenPaths[0] -Name "EnableSmartScreen" -Value 0 -Type DWord
+
+# Edge
+New-Item -Path $smartScreenPaths[1] -Force | Out-Null
+Set-ItemProperty -Path $smartScreenPaths[1] -Name "SmartScreenEnabled" -Value "Off" -Type String
+
+# Internet Explorer
+New-Item -Path $smartScreenPaths[2] -Force | Out-Null
+Set-ItemProperty -Path $smartScreenPaths[2] -Name "SmartScreenEnabled" -Value "Off" -Type String
+
+# Explorer
+New-Item -Path $smartScreenPaths[3] -Force | Out-Null
+Set-ItemProperty -Path $smartScreenPaths[3] -Name "SmartScreenEnabled" -Value "Off" -Type String
+
+# 8. Fast Startup & Hibernation
+Write-Host "Disabling Fast Startup and Hibernation..." -ForegroundColor Yellow
+powercfg /h off
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power" -Name "HibernateEnabled" -Value 0 -Type DWord
+
+# 9. Windows Error Reporting
+Write-Host "Disabling Windows Error Reporting..." -ForegroundColor Yellow
+$werPath = "HKLM:\SOFTWARE\Microsoft\Windows\Windows Error Reporting"
+New-Item -Path $werPath -Force | Out-Null
+Set-ItemProperty -Path $werPath -Name "Disabled" -Value 1 -Type DWord
+
+# 10. Disable User Account Control (Optional, but often desired in dev VMs)
+Write-Host "Configuring UAC..." -ForegroundColor Yellow
+$uacPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+Set-ItemProperty -Path $uacPath -Name "EnableLUA" -Value 0 -Type DWord
+Set-ItemProperty -Path $uacPath -Name "ConsentPromptBehaviorAdmin" -Value 0 -Type DWord
+Set-ItemProperty -Path $uacPath -Name "ConsentPromptBehaviorUser" -Value 0 -Type DWord
+Set-ItemProperty -Path $uacPath -Name "EnableUIA" -Value 0 -Type DWord
+
+# 11. Disable Windows Defender SmartScreen for Microsoft Store
+$storePath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\WindowsUpdate"
+Set-ItemProperty -Path $storePath -Name "SmartScreenEnabled" -Value "Off" -Type String -ErrorAction SilentlyContinue
+
+# 12. Disable Windows Defender SmartScreen for Microsoft Edge (All Channels)
+$edgeChannels = @("Edge", "Edge Dev", "Edge Beta", "Edge Insiders")
+foreach ($channel in $edgeChannels) {
+    $path = "HKLM:\SOFTWARE\Policies\Microsoft\$channel"
+    New-Item -Path $path -Force | Out-Null
+    Set-ItemProperty -Path $path -Name "SmartScreenEnabled" -Value "Off" -Type String
+}
+
+# 13. Disable Windows Defender SmartScreen for Microsoft Edge (All Users)
+$edgeUsers = @("HKLM:\SOFTWARE\Policies\Microsoft\Edge", "HKCU:\Software\Microsoft\Edge")
+foreach ($path in $edgeUsers) {
+    New-Item -Path $path -Force | Out-Null
+    Set-ItemProperty -Path $path -Name "SmartScreenEnabled" -Value "Off" -Type String
+}
+
+# 14. Disable Windows Defender SmartScreen for Microsoft Edge (All Machines)
+$edgeMachines = @("HKLM:\SOFTWARE\Policies\Microsoft\Edge", "HKLM:\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge")
+foreach ($path in $edgeMachines) {
+    New-Item -Path $path -Force | Out-Null
+    Set-ItemProperty -Path $path -Name "SmartScreenEnabled" -Value "Off" -Type String
+}
+
+# 15. Disable Windows Defender SmartScreen for Microsoft Edge (All Profiles)
+$edgeProfiles = @("HKCU:\Software\Microsoft\Edge", "HKCU:\Software\Classes\Software\Microsoft\Edge")
+foreach ($path in $edgeProfiles) {
+    New-Item -Path $path -Force | Out-Null
+    Set-ItemProperty -Path $path -Name "SmartScreenEnabled" -Value "Off" -Type String
+}
+
+# 16. Disable Windows Defender SmartScreen for Microsoft Edge (All Devices)
+$edgeDevices = @("HKLM:\SOFTWARE\Policies\Microsoft\Edge", "HKLM:\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge")
+foreach ($path in $edgeDevices) {
+    New-Item -Path $path -Force | Out-Null
+    Set-ItemProperty -Path $path -Name "SmartScreenEnabled" -Value "Off" -Type String
+}
+
+# 17. Disable Windows Defender SmartScreen for Microsoft Edge (All Browsers)
+$edgeBrowsers = @("HKLM:\SOFTWARE\Policies\Microsoft\Edge", "HKLM:\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge")
+foreach ($path in $edgeBrowsers) {
+    New-Item -Path $path -Force | Out-Null
+    Set-ItemProperty -Path $path -Name "SmartScreenEnabled" -Value "Off" -Type String
+}
+
+# 18. Disable Windows Defender SmartScreen for Microsoft Edge (All Users/Machines/Profiles/Devices/Browsers)
+$edgeAll = @("HKLM:\SOFTWARE\Policies\Microsoft\Edge", "HKLM:\SOFTWARE\WOW6432Node\Policies\Microsoft\Edge", "HKCU:\Software\Microsoft\Edge", "HKCU:\Software\Classes\Software\Microsoft\Edge")
+foreach ($path in $edgeAll) {
+    New-Item -Path $path -Force | Out-Null
+    Set-ItemProperty -Path $path -Name "SmartScreenEnabled" -Value "Off" -Type String
+}
+
+Write-Host "Script completed. Reboot the VM to apply changes." -ForegroundColor Green
+Write-Host "Note: Some changes (like Tamper Protection) require a reboot to fully take effect." -ForegroundColor Yellow
+```
+
 
 ### Rubeus
 
@@ -991,7 +1274,31 @@ export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/ssh-agent.socket"
 
 
 
-### Systemd-networkd
+### Systemd
+
+#### Run command at boot
+Using bloodhound CE CLI, start it on boot (it runs in an Incus container)
+
+```ini
+# /etc/systemd/system/bloodhound.service
+[Unit]
+Description=Run Bloodhound
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/root/bloodhound-cli up
+RemainAfterExit=yes
+Environment=HOME=/root
+
+[Install]
+WantedBy=multi-user.target
+
+```
+
+
+
+#### networkd
 
 Adding route blocks based off a list of networks
 
@@ -1048,7 +1355,59 @@ PS> Set-Service RemoteAccess -StartupType Automatic; Start-Service RemoteAccess
 
 ```
 
+#### Edge preset annoying stuff
+```powershell
+# Define the Edge Policy Path
+$edgePolicyPath = "HKLM:\SOFTWARE\Policies\Microsoft\Edge"
+New-Item -Path $edgePolicyPath -Force | Out-Null
 
+# 1. Skip First Run Experience (FRE)
+# This prevents the "Welcome to Edge" screen and account sign-in prompt
+Set-ItemProperty -Path $edgePolicyPath -Name "FirstRunExperienceEnabled" -Value 0 -Type DWord
+
+# 2. Set Default Search Engine (Optional: Prevents search engine selection screen)
+# Sets Bing as default (Value 1), Google (2), etc. Or use "SearchEngineChoice" for specific URL
+# For a clean dev image, Bing is standard, but you can set it to Google if preferred.
+# 1 = Bing, 2 = Google, 3 = Yahoo, 4 = DuckDuckGo
+Set-ItemProperty -Path $edgePolicyPath -Name "DefaultSearchProviderEnabled" -Value 1 -Type DWord
+Set-ItemProperty -Path $edgePolicyPath -Name "DefaultSearchProvider" -Value "Bing" -Type String
+
+# 3. Disable "Make Edge Your Default Browser" Prompt
+# This prevents the nag screen asking to set Edge as default
+Set-ItemProperty -Path $edgePolicyPath -Name "DefaultBrowserPromptEnabled" -Value 0 -Type DWord
+
+# 4. Disable "Join Microsoft 365" / Work/School Account Join Prompt
+# Prevents the "Connect to your organization" screen
+Set-ItemProperty -Path $edgePolicyPath -Name "SignoutWithWindows" -Value 0 -Type DWord
+Set-ItemProperty -Path $edgePolicyPath -Name "CloudPolicyDataSyncEnabled" -Value 0 -Type DWord
+
+# 5. Set Start Page (Optional: Prevents "Choose your start page" screen)
+# Sets the new tab page to a specific URL or default
+# "default" = Edge's default new tab page
+# "about:blank" = Blank page
+# "https://example.com" = Custom URL
+Set-ItemProperty -Path $edgePolicyPath -Name "HomepageList" -Value '["default"]' -Type String
+
+# 6. Disable "Restore Pages" Prompt
+# Prevents the "Restore your tabs?" prompt on launch
+Set-ItemProperty -Path $edgePolicyPath -Name "SessionRestoreEnabled" -Value 0 -Type DWord
+
+# 7. Disable "What's New" Popups
+Set-ItemProperty -Path $edgePolicyPath -Name "WhatsNewEnabled" -Value 0 -Type DWord
+
+# 8. Disable "Tip of the Day"
+Set-ItemProperty -Path $edgePolicyPath -Name "TipsEnabled" -Value 0 -Type DWord
+
+# 9. Disable "Sync" Prompt
+# Prevents the "Keep your items synced" prompt
+Set-ItemProperty -Path $edgePolicyPath -Name "SyncDisabled" -Value 1 -Type DWord
+
+# 10. Disable "Profile Selection" (If using multiple profiles)
+# Forces a single default profile
+Set-ItemProperty -Path $edgePolicyPath -Name "ProfileMarkup" -Value 'Default' -Type String
+
+Write-Host "Edge First-Run Experience settings applied." -ForegroundColor Green
+```
 
 #### RDP
 
