@@ -1,1 +1,0 @@
-export SSH_AUTH_SOCK=/var/lib/ssh-agent.sock

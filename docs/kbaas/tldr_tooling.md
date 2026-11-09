@@ -330,6 +330,30 @@ Categories=Utility;Development;
 
 ```
 
+### etckeeper
+
+#### Set a branch per host
+
+```bash
+sudo etckeeper vcs branch -m $(hostname)
+```
+
+#### Clear initial list of tracked files
+I only want to track specific configuration directory.
+```bash
+sudo etckeeper vcs rm -f -r --cached .
+```
+
+#### Configure remote origin
+```bash
+sudo etckeeper vcs remote add origin git@github.com:YOUR_USERNAME/YOUR_REPO.git
+```
+
+#### Push to remote origin
+```bash
+sudo etckeeper vcs push -u origin $(hostname)
+``` 
+
 
 ### Git
 
