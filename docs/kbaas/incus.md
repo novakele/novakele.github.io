@@ -10,13 +10,32 @@ Save somewhere all my configuration. It could help someone doing something simil
 
 ## Configuration
 
-### Oneliners
+### Commands
 
 #### Set static IP address
 ```bash
 incus config device override ai-proxy eth0 ipv4.address=10.46.184.68
 ```
 
+#### Change DHCP lease time
+Currently testing this to avoid used static IP addresses.
+```bash
+incus network set incusbr0 ipv4.dhcp.expiry=7d
+```
+
+#### Updating an OCI container
+
+```bash
+incus storage volume snapshot create patrii:default linkding-data pre-update
+incus stop patrii:linkding
+incus rebuild ghcr:sissbruecker/linkding:1.47.0-plus patrii:linkding
+incus start patrii:linkding
+```
+
+If all is well, delete the snapshot
+```bash
+incus storage volume snapshot delete patrii:default linkding-data pre-update
+```
 
 ### Profiles
 
@@ -277,3 +296,4 @@ Persistent=true
 [Install]
 WantedBy=timers.target
 ```
+

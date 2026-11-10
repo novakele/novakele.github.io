@@ -898,6 +898,16 @@ pnpm create @caido-community/plugin
 ```
 
 
+### Ntfy
+
+#### Create low priv user for delivery alerts
+
+```bash
+ntfy user add mailalerts
+ntfy access mailalerts mail-bounces write-only
+ntfy token add --label="mox relay" mailalerts
+```
+
 
 ### O365
 
